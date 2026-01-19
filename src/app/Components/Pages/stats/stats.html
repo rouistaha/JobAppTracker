@@ -1,0 +1,68 @@
+<div class="stats-container p-grid p-dir-col p-p-3">
+
+  <!-- KPI cards -->
+    <div class="kpi-container">
+    <div class="stat-card total">
+        <h4>Total</h4>
+        <span>{{ totalJobs }}</span>
+    </div>
+
+    <div class="stat-card draft">
+        <h4>Draft</h4>
+        <span>{{ draftCount }}</span>
+    </div>
+
+    <div class="stat-card applied">
+        <h4>Applied</h4>
+        <span>{{ appliedCount }}</span>
+    </div>
+
+    <div class="stat-card interviewing">
+        <h4>Interviewing</h4>
+        <span>{{ interviewingCount }}</span>
+    </div>
+
+    <div class="stat-card accepted">
+        <h4>Accepted</h4>
+        <span>{{ acceptedCount }}</span>
+    </div>
+
+    <div class="stat-card rejected">
+        <h4>Rejected</h4>
+        <span>{{ rejectedCount }}</span>
+    </div>
+    </div>
+
+
+  <!-- Charts grid -->
+<div class="charts-container">
+
+  <div class="chart-row">
+    <div class="chart-card">
+      <h3>Status Breakdown</h3>
+      <p-chart type="doughnut" [data]="statusChartData" [options]="chartOptions"></p-chart>
+    </div>
+
+    <div class="chart-card">
+      <h3>Rejections by Company</h3>
+      <p-chart type="bar" [data]="rejectionChartData" [options]="chartOptions"></p-chart>
+    </div>
+  </div>
+
+  <!-- <div class="chart-row">
+    <div class="chart-card full">
+      <h3>Applications Over Time</h3>
+      <p-chart type="line" [data]="monthlyChartData" [options]="chartOptions"></p-chart>
+    </div>
+  </div> -->
+
+  <div class="chart-row">
+    <div class="chart-card full">
+      <h3>Best Day to Apply</h3>
+      <p-chart type="bar" [data]="bestDayChartData" [options]="chartOptions"></p-chart>
+    </div>
+  </div>
+
+</div>
+
+</div>

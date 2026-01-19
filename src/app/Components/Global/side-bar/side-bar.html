@@ -1,0 +1,25 @@
+<div class="sidebar-container" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <button class="hamburger" (click)="toggleSidebar()">☰</button>
+    <span *ngIf="!isCollapsed">Job Tracker</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a routerLink="/jobs" routerLinkActive="active">
+      <i class="pi pi-briefcase"></i>
+      <span *ngIf="!isCollapsed">Jobs</span>
+    </a>
+    <a routerLink="/stats" routerLinkActive="active">
+      <i class="pi pi-chart-bar"></i>
+      <span *ngIf="!isCollapsed">Stats</span>
+    </a>
+    <a routerLink="/info" routerLinkActive="active">
+      <i class="pi pi-info-circle"></i>
+      <span *ngIf="!isCollapsed">Info</span>
+    </a>
+  </nav>
+</div>
+
+<div class="main-content" [class.collapsed]="isCollapsed">
+  <router-outlet></router-outlet>
+</div>

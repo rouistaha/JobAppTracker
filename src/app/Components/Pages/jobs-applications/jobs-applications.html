@@ -1,0 +1,206 @@
+<div class="jobs-container">
+  <!-- Header Section -->
+  <div class="jobs-header">
+    <div class="search-section">
+      <input
+        type="text"
+        pInputText
+        placeholder="Search jobs..."
+        [(ngModel)]="searchTerm"
+        (input)="filterJobs()"
+      />
+    </div>
+
+    <div class="actions">
+      <button pButton label="Add Job" icon="pi pi-plus" class="p-button-contrast" (click)="addJob()"></button>
+      <button
+        pButton
+        icon="{{ isCalendarView ? 'pi pi-table' : 'pi pi-calendar' }}"
+        label="{{ isCalendarView ? 'Table View' : 'Calendar View' }}"
+        class="p-button-secondary"
+        (click)="toggleView()"
+      ></button>
+    </div>
+  </div>
+
+  <!-- Color Legend -->
+  <div class="legend">
+    <span class="legend-item draft">Draft</span>
+    <span class="legend-item applied">Applied</span>
+    <span class="legend-item interviewing">Interviewing</span>
+    <span class="legend-item accepted">Accepted</span>
+    <span class="legend-item rejected">Rejected</span>
+  </div>
+
+  <!-- Main Content -->
+  <div class="jobs-content">
+    <div *ngIf="isCalendarView">
+      <full-calendar
+        [options]="calendarOptions"
+        style="height: 75vh;"
+      ></full-calendar>
+    </div>
+
+    <div *ngIf="!isCalendarView">
+      <p-table
+        [value]="filteredJobs"
+        [paginator]="true"
+        [rows]="7"
+        [responsiveLayout]="'scroll'"
+        [resizableColumns]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="company">Company <p-sortIcon field="company"></p-sortIcon></th>
+            <th pSortableColumn="position">Position <p-sortIcon field="position"></p-sortIcon></th>
+            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+            <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-job>
+          <tr>
+            <td>{{ job.company }}</td>
+            <td>{{ job.position }}</td>
+            <td>
+              <span class="status-badge {{ job.status | lowercase }}">{{ job.status }}</span>
+            </td>
+            <td>{{ job.date | date }}</td>
+            <td>
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editJob(job)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" (click)="confirmDelete($event,job)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog [header]="isEditing ? 'Edit Job' : 'Add Job'" [(visible)]="displayAddJobDialog" [modal]="true" [maximizable]="true">
+  <form #jobForm="ngForm" (ngSubmit)="saveJob()" class="p-fluid">
+
+    <!-- === Section 1: Obligatory Fields === -->
+    <h3>Basic Info</h3>
+    <div class="p-grid">
+      <!-- Company -->
+      <div class="p-field p-col-12 p-md-6">
+        <label for="company">Company*</label>
+        <input
+          id="company"
+          type="text"
+          pInputText
+          name="company"
+          required
+          [(ngModel)]="newJob.company"
+          #company="ngModel"
+          [ngClass]="{'ng-invalid ng-dirty': company.invalid && jobForm.submitted}"
+        />
+      </div>
+
+      <!-- Position -->
+      <div class="p-field p-col-12 p-md-6">
+        <label for="position">Position*</label>
+        <input
+          id="position"
+          type="text"
+          pInputText
+          name="position"
+          required
+          [(ngModel)]="newJob.position"
+          #position="ngModel"
+          [ngClass]="{'ng-invalid ng-dirty': position.invalid && jobForm.submitted}"
+        />
+      </div>
+
+      <!-- Status -->
+      <div class="p-field p-col-12 p-md-6">
+        <label for="status">Status*</label>
+        <p-select
+          name="status"
+          [options]="statusOptions"
+          [(ngModel)]="newJob.status"
+          required
+          placeholder="Select status"
+          class="w-full md:w-56"
+          #status="ngModel"
+          [ngClass]="{'ng-invalid ng-dirty': status.invalid && jobForm.submitted}"
+        ></p-select>
+      </div>
+
+      <!-- Apply Date -->
+      <div class="p-field p-col-12 p-md-6">
+        <label for="date">Day of Applying*</label><br>
+        <p-datepicker
+          id="date" 
+          name="date" 
+          [(ngModel)]="newJob.date"
+          [showIcon]="true"
+          inputId="buttondisplay"
+          [showOnFocus]="false"
+          required
+          #date="ngModel"
+          [ngClass]="{'ng-invalid ng-dirty': date.invalid && jobForm.submitted}"
+        ></p-datepicker>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- === Section 2: Optional Fields === -->
+    <h3>Optional Info</h3>
+    <div class="p-grid">
+    <div class="p-field p-col-12 p-md-6">
+        <label for="location">Company Address</label>
+        <span class="p-input-icon-left">
+            <i class="pi pi-map-marker"></i>
+            <input
+            id="location"
+            type="text"
+            pInputText
+            [(ngModel)]="newJob.location"
+            name="location"
+            placeholder="e.g., 123 Soliman, Nabeul, Tunisia"
+            />
+        </span>
+    </div>
+
+      <div class="p-field p-col-12 p-md-6">
+        <label for="salary">Salary Expectation</label><br>
+        <p-inputnumber id="salary" name="salary" [(ngModel)]="newJob.salary" mode="currency" currency="TND" locale="en-TN" />
+
+      </div>
+
+      <div class="p-field p-col-12 p-md-6">
+        <label for="hrPerson">Company's Representative</label>
+        <input id="hrPerson" type="text" pInputText [(ngModel)]="newJob.hrPerson" name="hrPerson" />
+      </div>
+
+      <div class="p-field p-col-12 p-md-6">
+        <label for="website">Company Website</label>
+        <input id="website" type="text" pInputText [(ngModel)]="newJob.website" name="website" />
+      </div>
+
+      <div class="p-field p-col-12 p-md-6">
+        <label for="source">Where did I apply?</label>
+        <input id="source" type="text" pInputText [(ngModel)]="newJob.source" name="source" />
+      </div>
+
+      <div class="p-field p-col-12">
+        <label for="notes">Notes</label>
+        <textarea id="notes" pInputTextarea [(ngModel)]="newJob.notes" name="notes"></textarea>
+      </div>
+    </div>
+
+    <!-- === Buttons === -->
+    <div class="p-d-flex p-jc-end p-mt-3">
+      <button pButton type="button" label="Cancel" class="p-button-secondary p-mr-2" (click)="displayAddJobDialog=false"></button>
+      <button pButton type="submit" label="Save" class="p-button-contrast"></button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-toast />
+<p-confirmdialog />

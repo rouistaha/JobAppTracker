@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+
+body{
+    background-color: rgb(234, 232, 232) !important;
+}
+
+
+.fc-daygrid-body{
+    table{
+        tbody{
+            background-color: white !important;
+        }
+    }
+}
+
+tbody.p-datatable-tbody tr, thead.p-datatable-thead tr th{
+    color: black !important;
+    background-color: white !important;
+}
+
+.p-dialog{
+    background-color: rgb(234, 232, 232) !important;
+    color: black !important;
+}
+
+input, p-select, textarea{
+    background-color: white !important;
+    color: black !important;
+    width: 100% !important;
+}
+
+.p-select-label{
+    color: black !important;
+}
